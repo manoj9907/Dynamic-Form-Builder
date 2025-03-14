@@ -140,3 +140,6 @@ To run this project, you will need to add the following environment variables to
 PORT=3000
 MONGO_URI=mongodb+srv://your-db-url
 JWT_SECRET=your-secret-key
+
+first step go to http://localhost:3000/api/register
+http://localhost:3000/api/login
