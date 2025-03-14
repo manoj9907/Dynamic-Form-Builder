@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Create Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #preview {
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .toggle {
+            display: inline-block;
+            width: 34px;
+            height: 18px;
+            background: #ccc;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle:after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            background: white;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+        .toggle.active {
+            background: #007bff;
+        }
+        .toggle.active:after {
+            left: 17px;
+        }
+        .field-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            gap: 10px;
+        }
+        .remove-btn {
+            background: red;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+    <script>
+        let fields = [];
+
+        function addField(type) {
+            let label = prompt("Enter field label:");
+            if (!label) return;
+
+            let required = false;
+            let defaultValue = prompt("Enter default value (optional):");
+            
+            let field = { type, label, required, defaultValue };
+            
+            if (type === 'radio' || type === 'checkbox' || type === 'dropdown') {
+                let options = prompt("Enter options separated by commas:");
+                field.options = options.split(",");
+            }
+            
+            fields.push(field);
+            updatePreview();
+        }
+
+        function toggleRequired(index) {
+            fields[index].required = !fields[index].required;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            let preview = document.getElementById("preview");
+            preview.innerHTML = "";
+            fields.forEach((field, index) => {
+                let div = document.createElement("div");
+                div.classList.add("field-container");
+                div.innerHTML = `<span><b>${field.label}</b> (${field.type}) - Default: ${field.defaultValue || 'None'}</span>
+                <div class="toggle-container">
+                    <div class="toggle ${field.required ? 'active' : ''}" onclick="toggleRequired(${index})"></div>
+                    <button onclick="removeField(${index})" class="remove-btn">X</button>
+                </div>`;
+                preview.appendChild(div);
+            });
+        }
+
+        function removeField(index) {
+            fields.splice(index, 1);
+            updatePreview();
+        }
+
+        function submitForm() {
+            document.getElementById("fields").value = JSON.stringify(fields);
+            document.getElementById("form-builder").submit();
+        }
+    </script>
+</head>
+<body>
+    <h1>Create a Form</h1>
+    <form id="form-builder" action="/admin/create-form" method="POST">
+        <input type="text" name="title" placeholder="Form Title" required>
+        <button type="button" onclick="addField('text')">Text Input</button>
+        <button type="button" onclick="addField('radio')">Radio Buttons</button>
+        <button type="button" onclick="addField('checkbox')">Checkbox</button>
+        <button type="button" onclick="addField('dropdown')">Dropdown</button>
+        <button type="button" onclick="addField('date')">Date Picker</button>
+        <button type="button" onclick="addField('file')">File Upload</button>
+        
+        <h3>Preview:</h3>
+        <div id="preview"></div>
+
+        <input type="hidden" name="fields" id="fields">
+        <button type="button" onclick="submitForm()">Save Form</button>
+    </form>
+</body>
+</html>

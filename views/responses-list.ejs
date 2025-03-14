@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responses for <%= form.title %></title>
+</head>
+<body>
+    <h2>Responses for <%= form.title %></h2>
+
+    <!-- Filter Form -->
+    <form method="GET" action="/admin/filter-responses/<%= form._id %>">
+        <label>Start Date:</label>
+        <input type="date" name="startDate">
+        <label>End Date:</label>
+        <input type="date" name="endDate">
+        <label>Search Field:</label>
+        <input type="text" name="searchField" placeholder="Field Name">
+        <label>Search Value:</label>
+        <input type="text" name="searchValue" placeholder="Value">
+        <button type="submit">Filter</button>
+    </form>
+
+    <br>
+    
+    <!-- Export Options -->
+    <a href="/admin/export/csv/<%= form._id %>">Download CSV</a> |
+    <a href="/admin/export/excel/<%= form._id %>">Download Excel</a>
+
+    <br><br>
+
+    <% if (responses.length === 0) { %>
+        <p>No responses yet.</p>
+    <% } else { %>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Submitted At</th>
+                    <% Object.keys(responses[0].responses).forEach(field => { %>
+                        <th><%= field %></th>
+                    <% }); %>
+                </tr>
+            </thead>
+            <tbody>
+                <% responses.forEach(response => { %>
+                    <tr>
+                        <td><%= response.submittedAt %></td>
+                        <% Object.values(response.responses).forEach(value => { %>
+                            <td><%= value %></td>
+                        <% }); %>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+</body>
+</html>

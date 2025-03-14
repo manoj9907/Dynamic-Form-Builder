@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= form.title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><%= form.title %></h2>
+        <form action="/submit-form/<%= form.slug %>" method="POST" enctype="multipart/form-data">
+            <% form.fields.forEach(field => { %>
+                <div>
+                    <label><%= field.label %></label>
+                    <% if (field.type === "text") { %>
+                        <input type="text" name="<%= field.label %>" value="<%= field.defaultValue || '' %>" <%= field.required ? 'required' : '' %> />
+                    <% } else if (field.type === "radio") { %>
+                        <div class="radio-group">
+                            <% field.options.forEach(option => { %>
+                                <label><input type="radio" name="<%= field.label %>" value="<%= option %>" <%= field.required ? 'required' : '' %> /><%= option %></label>
+                            <% }); %>
+                        </div>
+                    <% } else if (field.type === "checkbox") { %>
+                        <div class="checkbox-group">
+                            <% field.options.forEach(option => { %>
+                                <label><input type="checkbox" name="<%= field.label %>[]" value="<%= option %>" /><%= option %></label>
+                            <% }); %>
+                        </div>
+                    <% } else if (field.type === "dropdown") { %>
+                        <select name="<%= field.label %>">
+                            <% field.options.forEach(option => { %>
+                                <option value="<%= option %>"><%= option %></option>
+                            <% }); %>
+                        </select>
+                    <% } else if (field.type === "date") { %>
+                        <input type="date" name="<%= field.label %>" <%= field.required ? 'required' : '' %> />
+                    <% } else if (field.type === "file") { %>
+                        <input type="file" name="<%= field.label %>" <%= field.required ? 'required' : '' %> />
+                    <% } %>
+                </div>
+            <% }); %>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Forms List</title>
+</head>
+<body>
+    <h1>Forms</h1>
+    <ul>
+        <% forms.forEach(form => { %>
+            <li>
+                <a href="/form/<%= form.slug %>"><%= form.title %></a>
+                <a href="/edit/<%= form._id %>">Edit</a>
+                <button onclick="deleteForm('<%= form._id %>')">Delete</button>
+            </li>
+        <% }) %>
+    </ul>
+    <script>
+        async function deleteForm(id) {
+            if (confirm("Are you sure?")) {
+                const res = await fetch(`/forms/${id}`, { method: "DELETE" });
+                if (res.ok) location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
