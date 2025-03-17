@@ -8,7 +8,7 @@
 <body>
     <h2>Responses for <%= form.title %></h2>
 
-    <!-- Filter Form -->
+   
     <form method="GET" action="/admin/filter-responses/<%= form._id %>">
         <label>Start Date:</label>
         <input type="date" name="startDate">
@@ -23,7 +23,7 @@
 
     <br>
     
-    <!-- Export Options -->
+    
     <a href="/admin/export/csv/<%= form._id %>">Download CSV</a> |
     <a href="/admin/export/excel/<%= form._id %>">Download Excel</a>
 

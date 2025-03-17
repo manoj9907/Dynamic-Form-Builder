@@ -31,3 +31,13 @@ exports.isAdmin = async (req, res, next) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+exports.checkAdmin = (req, res, next) => {
+  const userRole = req.cookies?.role;
+  console.log("userRole", req);
+  if (!userRole || userRole !== "admin") {
+    return res.status(403).json({ message: "Access denied. Admins only." });
+  }
+
+  next();
+};

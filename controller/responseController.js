@@ -7,12 +7,12 @@ const ExcelJS = require("exceljs");
 
 exports.submitForm = async (req, res) => {
   try {
-    // 🔹 Check if token exists in cookies
+   
     if (!req.cookies || !req.cookies.token) {
       return res.status(401).json({ message: "Unauthorized: No token found" });
     }
 
-    // 🔹 Verify JWT Token
+    
     const token = req.cookies.token;
     let decoded;
     try {
@@ -22,7 +22,7 @@ exports.submitForm = async (req, res) => {
     }
     const userId = decoded.id;
 
-    // 🔹 Get form by slug
+  
     const { slug } = req.params;
     const form = await Form.findOne({ slug });
 
@@ -32,12 +32,12 @@ exports.submitForm = async (req, res) => {
 
     let responseData = {};
 
-    // 🔹 Validate form fields
+  
     for (let field of form.fields) {
       if (field.type === "checkbox") {
         responseData[field.label] = req.body[field.label] || [];
       } else if (field.type === "file") {
-        // Handle file uploads properly
+      
         if (!req.files || !req.files.length) {
           if (field.required) {
             return res
@@ -52,7 +52,7 @@ exports.submitForm = async (req, res) => {
           responseData[field.label] = uploadedFile ? uploadedFile.path : null;
         }
       } else {
-        // 🔹 Check required fields
+       
         if (
           field.required &&
           (!req.body[field.label] || req.body[field.label].trim() === "")
@@ -66,7 +66,7 @@ exports.submitForm = async (req, res) => {
       }
     }
 
-    // 🔹 Save response to the database
+   
     const response = new Response({
       formId: form._id,
       userId,

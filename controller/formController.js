@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 exports.createForm = async (req, res) => {
   try {
-    console.log("Cookies:", req.cookies); // 🔍 Debugging line
+    console.log("Cookies:", req.cookies);
     if (!req.cookies || !req.cookies.token) {
       return res.status(401).json({ error: "Unauthorized. No token found!" });
     }
@@ -27,7 +27,7 @@ exports.createForm = async (req, res) => {
 
     res.json({
       message: "Form created successfully!",
-      formLink: `/form/${newForm.slug}`,
+      formLink: `http://localhost:3000/form/${newForm.slug}`,
     });
   } catch (error) {
     console.error("Error:", error);
@@ -35,6 +35,14 @@ exports.createForm = async (req, res) => {
   }
 };
 
+exports.getFormAdmin = async (req, res) => {
+  try {
+    const forms = await Form.find();
+    res.render("forms-list", { forms });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 exports.getForm = async (req, res) => {
   try {
     const forms = await Form.find();
@@ -44,6 +52,27 @@ exports.getForm = async (req, res) => {
   }
 };
 
+exports.getFormlist = async (req, res) => {
+  try {
+    console.log("req", req.query);
+    const page = req.query.pagelimit;
+    const pageNum = req.query.pageNum;
+    const filterTitle = req.query.title;
+    console.log("ddd", filterTitle);
+
+    const forms = await Form.find({ title: filterTitle })
+      .skip((pageNum - 1) * page)
+      .limit(page);
+
+    console.log("forms", forms);
+
+    res.json({
+      response: forms,
+    });
+  } catch {
+    res.status(500).send(error.message);
+  }
+};
 exports.getFormBySlug = async (req, res) => {
   try {
     const form = await Form.findOne({ slug: req.params.slug });

@@ -1,7 +1,11 @@
 const express = require("express");
 const Form = require("../models/Form");
 const formController = require("../controller/formController");
-const { verifyToken, isAdmin } = require("../middlewares/authMiddleware");
+const {
+  verifyToken,
+  isAdmin,
+  checkAdmin,
+} = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
@@ -9,7 +13,7 @@ const router = express.Router();
 router.get("/admin", (req, res) => {
   res.render("admin");
 });
-
+router.get("/getforms", formController.getFormlist);
 router.post(
   "/admin/create-form",
   // verifyToken,
@@ -27,7 +31,7 @@ router.get("/form/:slug", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-router.get("/admin/form", verifyToken, isAdmin, formController.getForm);
+router.get("/admin/form", formController.getFormAdmin);
 router.get("/form", formController.getForm);
 router.get("/form/check/:slug", formController.getFormBySlug);
 router.put("/forms/:id", formController.editForm);

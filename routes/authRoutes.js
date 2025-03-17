@@ -10,7 +10,9 @@ const validateUser = [
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
 ];
-
+router.get("/register", (req, res) => {
+  res.render("register", { error: null, success: null });
+});
 router.post("/register", validateUser, register);
 router.get("/login", (req, res) => {
   res.render("login", { error: null });

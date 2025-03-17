@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/styles.css"> <!-- External CSS (Optional) -->
+    <link rel="stylesheet" href="/css/styles.css"> 
     <style>
-        /* General Styling */
         body {
             font-family: Arial, sans-serif;
             background: #f4f4f4;
@@ -59,9 +58,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background: #007bff;
             border: none;
-            color: white;
             font-size: 16px;
             border-radius: 5px;
             margin-top: 20px;
@@ -69,8 +66,22 @@
             transition: background 0.3s;
         }
 
-        button:hover {
+        .login-btn {
+            background: #007bff;
+            color: white;
+        }
+
+        .login-btn:hover {
             background: #0056b3;
+        }
+
+        .register-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .register-btn:hover {
+            background: #218838;
         }
     </style>
 </head>
@@ -87,7 +98,12 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             
-            <button type="submit">Login</button>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        
+        <form action="/api/register" method="GET">
+            <button type="submit" class="register-btn">Register</button>
         </form>
     </div>
 </body>

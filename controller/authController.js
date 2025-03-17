@@ -8,22 +8,31 @@ exports.register = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return next(createError(400, "Validation Error", errors.array()));
+      return res.render("register", {
+        error: "Validation Error",
+        success: null,
+      });
     }
 
     const { username, password, role } = req.body;
 
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return next(createError(400, "Username already taken"));
+      return res.render("register", {
+        error: "Username already taken",
+        success: null,
+      });
     }
 
     const user = new User({ username, password, role });
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.render("login", {
+      success: "Registration successful! Redirecting to login...",
+      error: null,
+    });
   } catch (err) {
-    next(createError(500, "Server error", err.message));
+    res.render("login", { error: "Server error", success: null });
   }
 };
 
